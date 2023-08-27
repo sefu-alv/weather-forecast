@@ -1,0 +1,6 @@
+.vh {
+    height: 10vh;
+}
+.title-color {
+    background-image: linear-gradient(to right, #6fa6f8, #5992ec, #447fdf, #2c6cd2, #0659c4);
+}
