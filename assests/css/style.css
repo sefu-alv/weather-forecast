@@ -15,7 +15,7 @@
     border: none;
 }
 
-.btn{
+.search{
    color: white;
     background-color: #649be2;
     width: 100%;
@@ -26,4 +26,17 @@
 form{
     padding-bottom: 5%;
     border-bottom: grey solid;
+}
+.history{
+    display: grid;
+}
+.cities{
+    color: rgb(17, 17, 17);
+    background-color: grey;
+    margin: 1ch;
+    height: 5ch;
+    border: transparent;
+}
+.current-city{
+    border: solid;
 }
