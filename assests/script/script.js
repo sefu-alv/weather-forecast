@@ -1,4 +1,12 @@
 $(document).ready(function () {
+  // incorporates date
+  var currentDate = new Date();
+
+  var formattedDate = currentDate.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "numeric",
+    day: "numeric",
+  });
   //  this function retrieves the stored history from local storage
   var getStoredHistory = function () {
     return JSON.parse(localStorage.getItem("history")) || [];
@@ -22,6 +30,7 @@ $(document).ready(function () {
       historyList.append(listItem);
     }
   };
+
   var currentWeather = function (cityInput) {
     var key = "a6b192a96b840ed8a0ce76098bebce52";
     $.ajax({
@@ -31,33 +40,33 @@ $(document).ready(function () {
     })
       .then((data) => {
         console.log(data);
-        var currentDate = new Date();
-        var formattedDate = currentDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "numeric",
-          day: "numeric",
-        });
+
+        // fetches the weather icons
         var iconCode = data.weather[0].icon;
         var iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
+
+        //  dynamically adding elements to the index.html
         var weatherIcon = $("<img>")
           .addClass("weather-icon")
           .attr("src", iconUrl)
           .attr("alt", data.weather[0].description);
 
-  
         var cardTitle = $("<h2>")
           .addClass("fw-bold card-title mb-2 mt-2")
           .text(data.name + " " + "(" + formattedDate + ")");
         var temp = $("<p>")
           .addClass("card-text")
           .text("Temp: " + data.main.temp + " C");
+
         var wind = $("<p>")
           .addClass("card-text")
           .text("Wind: " + data.wind.speed + " MPH");
+
         var humidity = $("<p>")
           .addClass("card-text mb-2")
           .text("Humidity: " + data.main.humidity + " %");
 
+        // appending the created elements and classes
         var cardBody = $("<div>").addClass("card-body border border-black");
         cardBody.append(cardTitle, weatherIcon, temp, wind, humidity);
 
@@ -68,9 +77,66 @@ $(document).ready(function () {
         console.error("Error fetching weather data:", error);
       });
   };
-var forcast = function(cityInput){
 
-}
+  // this functions shows the forcast for the next 5 days
+  var forecast = function (cityInput) {
+
+    var key = "a6b192a96b840ed8a0ce76098bebce52";
+    $.ajax({
+      type: "GET",
+      url: `https://api.openweathermap.org/data/2.5/forecast?q=${cityInput}&appid=${key}`,
+      dataType: "json",
+    }).then((data) => {
+      console.log(data);
+
+      // creating a card grid class using bootstrap
+      var cardGrid = $(".card-deck");
+// loop will determine how long the forecast needs to be
+      for (var i = 0; i < 5; i++) {
+        var forecastData = data.list[i];
+        var cardBody = $("<div>").addClass("card-body border border-black");
+        var card = $("<div>").addClass("card");
+
+        // adds the title to each card
+        var cardTitle = $("<h2>")
+          .addClass("fw-bold card-title mb-2 mt-2")
+          .text(formattedDate);
+
+          var iconCode = forecastData.weather[0].icon; 
+          var iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
+          
+          // Dynamically adding elements to the index.html
+          var forecastIcon = $("<img>")
+            .addClass("weather-icon")
+            .attr("src", iconUrl)
+            .attr("alt", forecastData.weather[0].description);
+
+
+        var cardSection = $("<div>").addClass("card-section");
+        var temperature = $("<p>").text(
+          "Temperature: " + forecastData.main.temp + "°C"
+        );
+
+
+        var wind = $("<p>").text("Wind: " + forecastData.wind.speed + " MPH");
+        var humid = $("<p>").text(
+          "Humidity: " + forecastData.main.humidity + " %"
+        );
+
+        // Appending the card components
+        cardSection.append(forecastIcon);
+        cardSection.append(temperature);
+        cardSection.append(wind);
+        cardSection.append(humid);
+        card.append(cardTitle);
+        card.append(cardSection);
+        cardBody.append(card);
+        cardGrid.append(cardBody);
+      }
+    });
+  };
+
+  
   // Search button click event
   $(".search").on("click", function (event) {
     event.preventDefault();
@@ -78,5 +144,6 @@ var forcast = function(cityInput){
     currentWeather(cityInput);
     storeHistory(cityInput);
     displayHistory();
+    forecast(cityInput);
   });
 });
