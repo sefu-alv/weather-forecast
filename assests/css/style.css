@@ -1,42 +1,26 @@
 .vh {
-    height: 10vh;
+  height: 10vh;
 }
 .title-color {
-    background-image: linear-gradient(to right, #6fa6f8, #5992ec, #447fdf, #2c6cd2, #0659c4);
+  background-image: linear-gradient(
+    to right,
+    #6fa6f8,
+    #5992ec,
+    #447fdf,
+    #2c6cd2,
+    #0659c4
+  );
 }
-.card{
-    margin-top: 4%;
-    margin-left: 3%;
-    border: transparent;
-    text-align: center;
+.card {
+  margin-top: 4%;
+  margin-left: 3%;
+  border: transparent;
 }
-.card-header{
-    background-color: white;
-    border: none;
+form {
+  border-bottom: grey solid;
 }
 
-.search{
-   color: white;
-    background-color: #649be2;
-    width: 100%;
-    margin-top: 5%;
-   
-    
-}
-form{
-    padding-bottom: 5%;
-    border-bottom: grey solid;
-}
-.history{
-    display: grid;
-}
-.cities{
-    color: rgb(17, 17, 17);
-    background-color: grey;
-    margin: 1ch;
-    height: 5ch;
-    border: transparent;
-}
-.current-city{
-    border: solid;
+.history li {
+  height: 2.5em;
+  background-color: rgb(143, 143, 143);
 }
