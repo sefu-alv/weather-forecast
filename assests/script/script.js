@@ -47,27 +47,27 @@ $(document).ready(function () {
 
         //  dynamically adding elements to the index.html
         var weatherIcon = $("<img>")
-          .addClass("weather-icon")
+          .addClass("weather-icon custom-left-margin")
           .attr("src", iconUrl)
           .attr("alt", data.weather[0].description);
 
         var cardTitle = $("<h2>")
-          .addClass("fw-bold card-title mb-2 mt-2")
+          .addClass("fw-bold card-title custom-left-margin mb-2 mt-2")
           .text(data.name + " " + "(" + formattedDate + ")");
         var temp = $("<p>")
-          .addClass("card-text")
+          .addClass("card-text custom-left-margin")
           .text("Temp: " + data.main.temp + " C");
 
         var wind = $("<p>")
-          .addClass("card-text")
+          .addClass("card-text custom-left-margin")
           .text("Wind: " + data.wind.speed + " MPH");
 
         var humidity = $("<p>")
-          .addClass("card-text mb-2")
+          .addClass("card-text custom-left-margin mb-2")
           .text("Humidity: " + data.main.humidity + " %");
 
         // appending the created elements and classes
-        var cardBody = $("<div>").addClass("card-body border border-black");
+        var cardBody = $("<div>").addClass("card-body border custom-left-margin border-black");
         cardBody.append(cardTitle, weatherIcon, temp, wind, humidity);
 
         // Clear the previous content and append the card body to the card
@@ -91,15 +91,22 @@ $(document).ready(function () {
 
       // creating a card grid class using bootstrap
       var cardGrid = $(".card-deck");
+      var currentDate = new Date(data.list[0].dt_txt);
+
 // loop will determine how long the forecast needs to be
       for (var i = 0; i < 5; i++) {
         var forecastData = data.list[i];
-        var cardBody = $("<div>").addClass("card-body border border-black");
-        var card = $("<div>").addClass("card");
-
+        var cardBody = $("<div>").addClass("card-body ");
+        var card = $("<div>").addClass("card bg-dark");
+        var formattedDate = currentDate.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        });
+    
         // adds the title to each card
         var cardTitle = $("<h2>")
-          .addClass("fw-bold card-title mb-2 mt-2")
+          .addClass("fw-bold card-title text-white mb-2 mt-2 custom-left-margin")
           .text(formattedDate);
 
           var iconCode = forecastData.weather[0].icon; 
@@ -112,7 +119,7 @@ $(document).ready(function () {
             .attr("alt", forecastData.weather[0].description);
 
 
-        var cardSection = $("<div>").addClass("card-section");
+        var cardSection = $("<div>").addClass("card-section custom-left-margin text-white");
         var temperature = $("<p>").text(
           "Temperature: " + forecastData.main.temp + "°C"
         );
@@ -132,6 +139,10 @@ $(document).ready(function () {
         card.append(cardSection);
         cardBody.append(card);
         cardGrid.append(cardBody);
+
+        // increments the date
+        currentDate.setDate(currentDate.getDate() + 1);
+
       }
     });
   };
