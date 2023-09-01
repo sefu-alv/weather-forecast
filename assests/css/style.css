@@ -24,3 +24,11 @@ form {
   height: 2.5em;
   background-color: rgb(143, 143, 143);
 }
+.card-deck {
+  gap: 3em;
+  width: 100%;
+  height: 8vh;
+}
+.custom-left-margin{
+  margin-left: 1rem;
+}

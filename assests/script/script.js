@@ -23,6 +23,10 @@ $(document).ready(function () {
   var displayHistory = function () {
     var storedHistory = getStoredHistory();
     var historyList = $(".history");
+
+    // Clear previous search history items
+    historyList.empty();
+
     for (var i = 0; i < storedHistory.length; i++) {
       var listItem = $("<li>")
         .addClass("list-group-item btn text-black-50 mb-3 ")
@@ -31,6 +35,13 @@ $(document).ready(function () {
     }
   };
 
+  // activates the history buttons
+  $(".history").on("click", "li", function () {
+    currentWeather($(this).text());
+    forecast($(this).text());
+  });
+
+  // pulls current weather data
   var currentWeather = function (cityInput) {
     var key = "a6b192a96b840ed8a0ce76098bebce52";
     $.ajax({
@@ -54,9 +65,15 @@ $(document).ready(function () {
         var cardTitle = $("<h2>")
           .addClass("fw-bold card-title custom-left-margin mb-2 mt-2")
           .text(data.name + " " + "(" + formattedDate + ")");
-        var temp = $("<p>")
-          .addClass("card-text custom-left-margin")
-          .text("Temp: " + data.main.temp + " C");
+
+        // conversion to fahrenheit
+        var temperatureInKelvin = data.main.temp;
+        var temperatureInCelsius = temperatureInKelvin - 273.15;
+        var temperatureInFahrenheit = (temperatureInCelsius * 9) / 5 + 32; // Convert from Celsius to Fahrenheit// Convert from Kelvin to Celsius
+        var temp = $("<p>").addClass('custom-left-margin').text(
+          "Temperature: " + temperatureInFahrenheit.toFixed(2) + " °F"
+        );
+        
 
         var wind = $("<p>")
           .addClass("card-text custom-left-margin")
@@ -67,7 +84,9 @@ $(document).ready(function () {
           .text("Humidity: " + data.main.humidity + " %");
 
         // appending the created elements and classes
-        var cardBody = $("<div>").addClass("card-body border custom-left-margin border-black");
+        var cardBody = $("<div>").addClass(
+          "card-body border  border-black"
+        );
         cardBody.append(cardTitle, weatherIcon, temp, wind, humidity);
 
         // Clear the previous content and append the card body to the card
@@ -80,7 +99,6 @@ $(document).ready(function () {
 
   // this functions shows the forcast for the next 5 days
   var forecast = function (cityInput) {
-
     var key = "a6b192a96b840ed8a0ce76098bebce52";
     $.ajax({
       type: "GET",
@@ -93,7 +111,8 @@ $(document).ready(function () {
       var cardGrid = $(".card-deck");
       var currentDate = new Date(data.list[0].dt_txt);
 
-// loop will determine how long the forecast needs to be
+      cardGrid.empty();
+      // loop will determine how long the forecast needs to be
       for (var i = 0; i < 5; i++) {
         var forecastData = data.list[i];
         var cardBody = $("<div>").addClass("card-body ");
@@ -103,27 +122,35 @@ $(document).ready(function () {
           month: "numeric",
           day: "numeric",
         });
-    
+
         // adds the title to each card
         var cardTitle = $("<h2>")
-          .addClass("fw-bold card-title text-white mb-2 mt-2 custom-left-margin")
+          .addClass(
+            "fw-bold card-title text-white mb-2 mt-2 custom-left-margin"
+          )
           .text(formattedDate);
 
-          var iconCode = forecastData.weather[0].icon; 
-          var iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
-          
-          // Dynamically adding elements to the index.html
-          var forecastIcon = $("<img>")
-            .addClass("weather-icon")
-            .attr("src", iconUrl)
-            .attr("alt", forecastData.weather[0].description);
+        var iconCode = forecastData.weather[0].icon;
+        var iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
 
+        // Dynamically adding elements to the index.html
+        var forecastIcon = $("<img>")
+          .addClass("weather-icon")
+          .attr("src", iconUrl)
+          .attr("alt", forecastData.weather[0].description);
 
-        var cardSection = $("<div>").addClass("card-section custom-left-margin text-white");
-        var temperature = $("<p>").text(
-          "Temperature: " + forecastData.main.temp + "°C"
+        var cardSection = $("<div>").addClass(
+          "card-section custom-left-margin text-white"
         );
 
+        // converstion from kelvin to fahrenheit
+        var temperatureInKelvin = forecastData.main.temp;
+        var temperatureInCelsius = temperatureInKelvin - 273.15;
+        var temperatureInFahrenheit = (temperatureInCelsius * 9) / 5 + 32;
+
+        var temperature = $("<p>").text(
+          "Temperature: " + temperatureInFahrenheit.toFixed(2) + " °F"
+        );
 
         var wind = $("<p>").text("Wind: " + forecastData.wind.speed + " MPH");
         var humid = $("<p>").text(
@@ -142,12 +169,10 @@ $(document).ready(function () {
 
         // increments the date
         currentDate.setDate(currentDate.getDate() + 1);
-
       }
     });
   };
 
-  
   // Search button click event
   $(".search").on("click", function (event) {
     event.preventDefault();
