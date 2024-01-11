@@ -1,185 +1,123 @@
 $(document).ready(function () {
-  // incorporates date
-  var currentDate = new Date();
+  // ... (your existing code)
 
-  var formattedDate = currentDate.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  });
-  //  this function retrieves the stored history from local storage
-  var getStoredHistory = function () {
-    return JSON.parse(localStorage.getItem("history")) || [];
+  // Function to append weather data dynamically to the page
+  var appendWeatherToPage = function (data, isCurrentWeather = false) {
+    var iconCode = data.weather[0].icon;
+    var iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
+  
+    var weatherIcon = $("<img>")
+      .addClass("weather-icon custom-left-margin")
+      .attr("src", iconUrl)
+      .attr("alt", data.weather[0].description);
+  
+    // Convert the timestamp to a Date object
+    var date = new Date(data.dt * 1000);
+  
+    // Format the date
+    var day = date.getDate();
+    var month = date.getMonth() + 1; // Months are zero-based
+    var year = date.getFullYear();
+  
+    var formattedDate = month + '/' + day + '/' + year;
+  
+    var cardTitle = $("<h2>")
+      .addClass("fw-bold card-title custom-left-margin mb-2 mt-2")
+      .text(data.name + " " + "(" + formattedDate + ")");
+  
+    var temperatureInKelvin = data.main.temp;
+    var temperatureInCelsius = temperatureInKelvin - 273.15;
+    var temperatureInFahrenheit = (temperatureInCelsius * 9) / 5 + 32;
+    var temp = $("<p>")
+      .addClass('custom-left-margin')
+      .text("Temperature: " + temperatureInFahrenheit.toFixed(2) + " °F");
+  
+    var wind = $("<p>")
+      .addClass("card-text text-white custom-left-margin")
+      .text("Wind: " + data.wind.speed + " MPH");
+    var humidity = $("<p>")
+      .addClass("card-text custom-left-margin mb-2")
+      .text("Humidity: " + data.main.humidity + " %");
+
+    var cardBody = $("<div>").addClass("card-body border border-black");
+    cardBody.append(cardTitle, weatherIcon, temp, wind, humidity);
+
+    if (isCurrentWeather) {
+      // Append to current weather card
+      $("#todayCard").empty().append(cardBody);
+    } else {
+      // Append to forecast card
+      var card = $("<div>").addClass("card bg-white");
+      var cardSection = $("<div>").addClass("card-section custom-left-margin text-black");
+      cardSection.append(weatherIcon, temp, wind, humidity);
+      card.append(cardTitle, cardSection);
+      cardBody.append(card);
+      $(".card-deck").append(cardBody);
+    }
   };
+  function forecast(city) {
+    var key = "a6b192a96b840ed8a0ce76098bebce52";
+    var queryURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}`;
+  
+    $.ajax({
+      url: queryURL,
+      method: "GET"
+    }).then(function(response) {
+      // Filter the list of forecasts to get one forecast for each day
+      var dailyForecasts = response.list.filter(function(forecast) {
+        return forecast.dt_txt.endsWith("12:00:00");
+      });
+  
+      // For each filtered forecast, create a card and append it to the page
+      dailyForecasts.forEach(function(forecast) {
+        appendWeatherToPage(forecast);
+      });
+    });
+  }
+  // Function to get current location and fetch weather
+  var getCurrentLocationWeather = function () {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        var key = "a6b192a96b840ed8a0ce76098bebce52";
 
-  // this function stores history in local storage
-  var storeHistory = function (cityInput) {
-    var history = getStoredHistory();
-    history.push(cityInput);
-    localStorage.setItem("history", JSON.stringify(history));
-  };
-
-  // this function displays history
-  var displayHistory = function () {
-    var storedHistory = getStoredHistory();
-    var historyList = $(".history");
-
-    // Clear previous search history items
-    historyList.empty();
-
-    for (var i = 0; i < storedHistory.length; i++) {
-      var listItem = $("<li>")
-        .addClass("list-group-item btn text-black-50 mb-3 ")
-        .text(storedHistory[i]);
-      historyList.append(listItem);
+        $.ajax({
+          type: "GET",
+          url: `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}`,
+          dataType: "json",
+        }).then((data) => {
+          appendWeatherToPage(data, true); // Append current location weather
+          forecast(data.name);
+          console.log(data);
+        });
+      }, function (error) {
+        console.error("Error getting current location:", error);
+      });
+    } else {
+      console.error("Geolocation is not supported by this browser.");
     }
   };
 
-  // activates the history buttons
-  $(".history").on("click", "li", function () {
-    currentWeather($(this).text());
-    forecast($(this).text());
-  });
-
-  // pulls current weather data
-  var currentWeather = function (cityInput) {
-    var key = "a6b192a96b840ed8a0ce76098bebce52";
-    $.ajax({
-      type: "GET",
-      url: `https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${key}`,
-      dataType: "json",
-    })
-      .then((data) => {
-        console.log(data);
-
-        // fetches the weather icons
-        var iconCode = data.weather[0].icon;
-        var iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
-
-        //  dynamically adding elements to the index.html
-        var weatherIcon = $("<img>")
-          .addClass("weather-icon custom-left-margin")
-          .attr("src", iconUrl)
-          .attr("alt", data.weather[0].description);
-
-        var cardTitle = $("<h2>")
-          .addClass("fw-bold card-title custom-left-margin mb-2 mt-2")
-          .text(data.name + " " + "(" + formattedDate + ")");
-
-        // conversion to fahrenheit
-        var temperatureInKelvin = data.main.temp;
-        var temperatureInCelsius = temperatureInKelvin - 273.15;
-        var temperatureInFahrenheit = (temperatureInCelsius * 9) / 5 + 32; // Convert from Celsius to Fahrenheit// Convert from Kelvin to Celsius
-        var temp = $("<p>").addClass('custom-left-margin').text(
-          "Temperature: " + temperatureInFahrenheit.toFixed(2) + " °F"
-        );
-        
-
-        var wind = $("<p>")
-          .addClass("card-text custom-left-margin")
-          .text("Wind: " + data.wind.speed + " MPH");
-
-        var humidity = $("<p>")
-          .addClass("card-text custom-left-margin mb-2")
-          .text("Humidity: " + data.main.humidity + " %");
-
-        // appending the created elements and classes
-        var cardBody = $("<div>").addClass(
-          "card-body border  border-black"
-        );
-        cardBody.append(cardTitle, weatherIcon, temp, wind, humidity);
-
-        // Clear the previous content and append the card body to the card
-        $("#todayCard").empty().append(cardBody);
-      })
-      .catch((error) => {
-        console.error("Error fetching weather data:", error);
-      });
-  };
-
-  // this functions shows the forcast for the next 5 days
-  var forecast = function (cityInput) {
-    var key = "a6b192a96b840ed8a0ce76098bebce52";
-    $.ajax({
-      type: "GET",
-      url: `https://api.openweathermap.org/data/2.5/forecast?q=${cityInput}&appid=${key}`,
-      dataType: "json",
-    }).then((data) => {
-      console.log(data);
-
-      // creating a card grid class using bootstrap
-      var cardGrid = $(".card-deck");
-      var currentDate = new Date(data.list[0].dt_txt);
-
-      cardGrid.empty();
-      // loop will determine how long the forecast needs to be
-      for (var i = 0; i < 5; i++) {
-        var forecastData = data.list[i];
-        var cardBody = $("<div>").addClass("card-body ");
-        var card = $("<div>").addClass("card bg-dark");
-        var formattedDate = currentDate.toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "numeric",
-          day: "numeric",
-        });
-
-        // adds the title to each card
-        var cardTitle = $("<h2>")
-          .addClass(
-            "fw-bold card-title text-white mb-2 mt-2 custom-left-margin"
-          )
-          .text(formattedDate);
-
-        var iconCode = forecastData.weather[0].icon;
-        var iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
-
-        // Dynamically adding elements to the index.html
-        var forecastIcon = $("<img>")
-          .addClass("weather-icon")
-          .attr("src", iconUrl)
-          .attr("alt", forecastData.weather[0].description);
-
-        var cardSection = $("<div>").addClass(
-          "card-section custom-left-margin text-white"
-        );
-
-        // converstion from kelvin to fahrenheit
-        var temperatureInKelvin = forecastData.main.temp;
-        var temperatureInCelsius = temperatureInKelvin - 273.15;
-        var temperatureInFahrenheit = (temperatureInCelsius * 9) / 5 + 32;
-
-        var temperature = $("<p>").text(
-          "Temperature: " + temperatureInFahrenheit.toFixed(2) + " °F"
-        );
-
-        var wind = $("<p>").text("Wind: " + forecastData.wind.speed + " MPH");
-        var humid = $("<p>").text(
-          "Humidity: " + forecastData.main.humidity + " %"
-        );
-
-        // Appending the card components
-        cardSection.append(forecastIcon);
-        cardSection.append(temperature);
-        cardSection.append(wind);
-        cardSection.append(humid);
-        card.append(cardTitle);
-        card.append(cardSection);
-        cardBody.append(card);
-        cardGrid.append(cardBody);
-
-        // increments the date
-        currentDate.setDate(currentDate.getDate() + 1);
-      }
-    });
-  };
+  // Trigger getCurrentLocationWeather when the page loads
+  getCurrentLocationWeather();
 
   // Search button click event
   $(".search").on("click", function (event) {
     event.preventDefault();
     var cityInput = $(".search-input").val();
-    currentWeather(cityInput);
-    storeHistory(cityInput);
-    displayHistory();
-    forecast(cityInput);
+    var key = "a6b192a96b840ed8a0ce76098bebce52";
+    if (cityInput.trim() !== "") {
+      $.ajax({
+        type: "GET",
+        url: `https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${key}`,
+        dataType: "json",
+      }).then((data) => {
+        appendWeatherToPage(data, true); // Append searched location weather
+        forecast(data.name);
+      });
+    } else {
+      console.error("Please enter a valid city.");
+    }
   });
 });

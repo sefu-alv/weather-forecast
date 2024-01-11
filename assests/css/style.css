@@ -1,3 +1,17 @@
+html {
+  scroll-behavior: smooth;
+  height: auto
+}
+body {
+  background: rgb(2,0,36);
+background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 35%, rgba(0,212,255,1) 100%);
+height: auto;
+width: 100%;
+display: flex; /* Use flexbox to center the content */
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+  flex-direction: column; 
+}
 .vh {
   height: 10vh;
 }
@@ -11,13 +25,17 @@
     #0659c4
   );
 }
-.card {
+/* .card {
   margin-top: 4%;
   margin-left: 3%;
   border: transparent;
-}
-form {
-  border-bottom: grey solid;
+} */
+.card{
+  background: #ffffff; /* Set the background color to white */
+  display: flex; /* Use flexbox to center the content */
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+  flex-direction: column; /* Stack the content vertically */
 }
 
 .history li {
@@ -31,4 +49,22 @@ form {
 }
 .custom-left-margin{
   margin-left: 1rem;
+}
+.btn {
+  margin-left: 20px !important;
+}
+
+
+
+.navbar-brand {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  
+}
+
+@media (max-width: 768px) {
+  .navbar-brand {
+    font-size: 1.5rem;
+  }
 }

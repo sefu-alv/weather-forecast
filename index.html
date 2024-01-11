@@ -13,40 +13,31 @@
       <link rel="stylesheet" href="./assests/css/style.css" />
    </head>
    <body>
-      <div
-         class="container-fluid d-flex vh align-items-center justify-content-center title-color text-white"
-         >
-         <p class="fs-1 fw-bold">Weather Dashboard</p>
-      </div>
-      <div class="container-fluid">
-         <div class="row">
-            <aside class="card content col-lg-2">
-               <h3 class="card-header bg-white border-0 text-center fw-bold">
-                  Search for a City:
-               </h3>
-               <form class="form-inline mb-4 city-input form-group">
-                  <input
-                     id="search-bar"
-                     type="text"
-                     autofocus="true"
-                     class="form-control search-input"
-                     placeholder="Portland"
-                     />
-                  <button
-                     type="submit"
-                     class="btn w-100 bg-secondary mt-4 mb-4 test-white search"
-                     >
-                  search
-                  </button>
-               </form>
-               <ul class="list-group history"></ul>
-            </aside>
-            <div class="col-lg-9 ">
-               <div id="todayCard" class="mt-3" ></div>
-                  <div id="forecast" class=" d-flex flex-nowrap card-deck  mt-3"></div>
-            </div>
+      <nav class="navbar">
+         <div class="container-fluid">
+           <a class="navbar-brand">Weather Dashboard</a>
+           <form class="d-flex" role="search">
+             <input
+             type="text"
+             autofocus="true"
+             placeholder="Portland" 
+             id="search-bar" 
+             type="search" 
+             placeholder="Search for a City" 
+             aria-label="Search"
+              class="form-control search-input me-2" type="search" placeholder="Search" aria-label="Search">
+             <button class="btn search btn-outline-success" type="submit">Search</button>
+           </form>
          </div>
-      </div>
+       </nav>
+       <div class="container-fluid flex justify-content-center">
+         <div class="row">
+           <div class="col-lg-9 d-flex flex-wrap">
+             <div id="todayCard" class="mt-3"></div>
+             <div id="forecast" class="d-flex flex-wrap card-deck mt-3"></div>
+           </div>
+         </div>
+       </div>
       <script
          src="https://code.jquery.com/jquery-3.7.0.js"
          integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
