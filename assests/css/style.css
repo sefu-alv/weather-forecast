@@ -1,16 +1,16 @@
 html {
   scroll-behavior: smooth;
-  height: auto
+  height: auto;
 }
 body {
-  background: rgb(2,0,36);
-background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(0,0,0,1) 35%, rgba(0,212,255,1) 100%);
-height: auto;
-width: 100%;
-display: flex; /* Use flexbox to center the content */
-  justify-content: center; /* Center the content horizontally */
-  align-items: center; /* Center the content vertically */
-  flex-direction: column; 
+  background-color: #70a1ff;
+  background-image: linear-gradient(315deg, #70a1ff 0%, #c2c0c0 74%);
+  height: auto;
+  width: 100%;
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
+  flex-direction: column;
 }
 .vh {
   height: 10vh;
@@ -25,46 +25,67 @@ display: flex; /* Use flexbox to center the content */
     #0659c4
   );
 }
-/* .card {
-  margin-top: 4%;
-  margin-left: 3%;
-  border: transparent;
-} */
-.card{
-  background: #ffffff; /* Set the background color to white */
-  display: flex; /* Use flexbox to center the content */
-  justify-content: center; /* Center the content horizontally */
-  align-items: center; /* Center the content vertically */
-  flex-direction: column; /* Stack the content vertically */
+
+.card {
+  background-color: rgba(128, 128, 128, 0.5);
+  border-radius: 15px;
+  height: 20rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+#todayCard {
+  background-color: rgba(128, 128, 128, 0.5);
+  border-radius: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
-.history li {
-  height: 2.5em;
-  background-color: rgb(143, 143, 143);
-}
 .card-deck {
   gap: 3em;
   width: 100%;
+  
   height: 8vh;
 }
-.custom-left-margin{
-  margin-left: 1rem;
-}
+
 .btn {
   margin-left: 20px !important;
 }
-
-
 
 .navbar-brand {
   font-size: 2rem;
   font-weight: 700;
   color: #fff;
-  
 }
 
 @media (max-width: 768px) {
   .navbar-brand {
     font-size: 1.5rem;
   }
+}
+
+#forecast {
+  margin-bottom: 5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  
+}
+.weather-footer {
+  background-color: #f8f9fa;
+  padding: 10px 0;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.weather-footer p {
+  margin: 0;
 }
