@@ -62,8 +62,8 @@ $(document).ready(function () {
     console.log(data);
   };
   function forecast(city) {
-    var key = "a6b192a96b840ed8a0ce76098bebce52";
-    var queryURL = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${key}`;
+    var key = "QFHiIoVVbCLzbrruqyMqB2TAF35USXGN";
+    var queryURL = `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${city}&appid=${key}`;
 
     $.ajax({
       url: queryURL,
@@ -88,11 +88,11 @@ $(document).ready(function () {
         function (position) {
           var latitude = position.coords.latitude;
           var longitude = position.coords.longitude;
-          var key = "a6b192a96b840ed8a0ce76098bebce52";
+          var key = "QFHiIoVVbCLzbrruqyMqB2TAF35USXGN";
 
           $.ajax({
             type: "GET",
-            url: `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${key}`,
+            url: `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${key}&q=${latitude}%2C${longitude}`,
             dataType: "json",
           }).then((data) => {
             appendWeatherToPage(data, data.name, true);
@@ -116,16 +116,18 @@ $(document).ready(function () {
   $(".search").on("click", function (event) {
     event.preventDefault();
     var cityInput = $(".search-input").val();
-    var key = "a6b192a96b840ed8a0ce76098bebce52";
+    var key = "	QFHiIoVVbCLzbrruqyMqB2TAF35USXGN";
     if (cityInput.trim() !== "") {
       $.ajax({
         type: "GET",
-        url: `https://api.openweathermap.org/data/2.5/weather?q=${cityInput}&appid=${key}`,
+        url: `https://dataservice.accuweather.com/locations/v1/postalcodes/search?apikey=${key}&q=${cityInput}`,
         dataType: "json",
       }).then((data) => {
-        appendWeatherToPage(data, data.name, true); 
+        console.log(data)
+        console.log(data.LocalizedName)
+        appendWeatherToPage(data, data.EnglishName, true); 
         $(".card-deck").empty();
-        forecast(data.name);
+        forecast(data.EnglishName);
       });
     } else {
       console.error("Please enter a valid city.");
