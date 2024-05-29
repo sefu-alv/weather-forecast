@@ -2,83 +2,46 @@ $(document).ready(function () {
   // ... (your existing code)
 
   // Function to append weather data dynamically to the page
-  var appendWeatherToPage = function (
-    data,
-    cityName,
-    isCurrentWeather = false
-  ) {
-    var iconCode = data.weather[0].icon;
-    var iconUrl = `http://openweathermap.org/img/wn/${iconCode}.png`;
-
-    var weatherIcon = $("<img>")
-      .addClass("weather-icon ")
-      .attr("src", iconUrl)
-      .attr("alt", data.weather[0].description);
-
-    // Convert the timestamp to a Date object
-    var date = new Date(data.dt * 1000);
-
-    // Format the date
-    var day = date.getDate();
-    var month = date.getMonth() + 1; // Months are zero-based
-    var year = date.getFullYear();
-
-    var formattedDate = month + "/" + day + "/" + year;
-
-    var cardTitle = $("<h2>")
-      .addClass("fw-bold card-title  mb-2 mt-2")
-      .text(cityName + " " + "(" + formattedDate + ")");
-
-    var temperatureInKelvin = data.main.temp;
-    var temperatureInCelsius = temperatureInKelvin - 273.15;
-    var temperatureInFahrenheit = (temperatureInCelsius * 9) / 5 + 32;
-    var temp = $("<p>")
-      .addClass("")
-      .text("Temperature: " + temperatureInFahrenheit.toFixed(2) + " °F");
-
-    var wind = $("<p>")
-      .addClass("card-text text-black ")
-      .text("Wind: " + data.wind.speed + " MPH");
-    var humidity = $("<p>")
-      .addClass("card-text  mb-2")
-      .text("Humidity: " + data.main.humidity + " %");
-
-    var cardBody = $("<div>").addClass("card-body ");
-    cardBody.append(cardTitle, weatherIcon, temp, wind, humidity);
-
-    if (isCurrentWeather) {
-      // Append to current weather card
-      $("#todayCard").empty().append(cardBody);
-    } else {
-      // Append to forecast card
-      var card = $("<div>").addClass("card");
-      var cardBodyForecast = $("<div>").addClass("card-body");
-      var cardSection = $("<div>").addClass("card-section  text-black");
-      cardSection.append(weatherIcon, temp, wind, humidity);
-      cardBodyForecast.append(cardTitle, cardSection);
-      card.append(cardBodyForecast);
-      $(".card-deck").append(card);
-    }
-    console.log(data);
-  };
-  function forecast(city) {
+  function appendWeatherToPage(cityName, temperatureData, weatherIcon, perciptation) {
+    // Create a new div to hold the weather data
+    var weatherDiv = $("<div>");
+  
+    // Create and append the city name element
+    var cityNameElem = $("<h2>").text(cityName);
+    weatherDiv.append(cityNameElem);
+  
+    // Create and append the temperature data element
+    var temperatureElem = $("<p>").text(temperatureData);
+    weatherDiv.append(temperatureElem);
+  
+    // Create and append the weather icon element
+    var iconElem = $("<img>").attr("src", `path/to/icons/${weatherIcon}.png`); // Assuming you have weather icons stored locally
+    weatherDiv.append(iconElem);
+  
+    // Create and append the precipitation data element
+    var percipitationElem = $("<p>").text(perciptation ? "There will be precipitation." : "There will be no precipitation.");
+    weatherDiv.append(percipitationElem);
+  
+    // Append the weather div to the page
+    $("#forecast").append(weatherDiv); // Assuming you have a div with id "weatherContainer" to hold the weather data
+  }
+  function forecast(locationKey) {
     var key = "QFHiIoVVbCLzbrruqyMqB2TAF35USXGN";
-    var queryURL = `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${city}&appid=${key}`;
-
+    var queryURL =`http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${key}`;
     $.ajax({
       url: queryURL,
       method: "GET",
-    }).then(function (response) {
-      var cityName = response.city.name;
-      // Filter the list of forecasts to get one forecast for each day
-      var dailyForecasts = response.list.filter(function (forecast) {
-        return forecast.dt_txt.endsWith("12:00:00");
+    }).then((data) => {
+      console.log(data);
+      data.DailyForecasts.forEach((forecast) => {
+        var cityName = data.Headline.Text;
+        var temperatureData = forecast.Temperature.Minimum.Value + "°F" + " / " + forecast.Temperature.Maximum.Value + "°F";
+        var weatherIcon = forecast.Day.Icon;
+        var perciptation = forecast.Day.hasPrecipitation;
+        appendWeatherToPage(cityName, temperatureData, weatherIcon, perciptation);
       });
-
-      // For each filtered forecast, create a card and append it to the page
-      dailyForecasts.forEach(function (forecast) {
-        appendWeatherToPage(forecast, cityName);
-      });
+    }).catch((error) => {
+      console.error("Error getting forecast data:", error);
     });
   }
   // Function to get current location and fetch weather
@@ -120,14 +83,16 @@ $(document).ready(function () {
     if (cityInput.trim() !== "") {
       $.ajax({
         type: "GET",
-        url: `https://dataservice.accuweather.com/locations/v1/postalcodes/search?apikey=${key}&q=${cityInput}`,
+        url: `https://dataservice.accuweather.com/locations/v1/cities/search?apikey=${key}&q=${cityInput}`,
         dataType: "json",
       }).then((data) => {
         console.log(data)
-        console.log(data.LocalizedName)
-        appendWeatherToPage(data, data.EnglishName, true); 
+        console.log(data[0].LocalizedName)
+        console.log(data[0].Key)
+        forecast(data[0].Key);
         $(".card-deck").empty();
-        forecast(data.EnglishName);
+        
+        console.log(data[0].LocalizedName);
       });
     } else {
       console.error("Please enter a valid city.");
