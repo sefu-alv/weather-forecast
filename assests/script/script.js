@@ -21,17 +21,19 @@ $(document).ready(function () {
       cityNameDiv.append(dateDiv);
 
       var temperatureElem = $("<p>").text(temperatureData);
-      var temperatureDiv = $("<div>").append(temperatureElem).addClass("temp-container");
+      var tempAndMessageDiv = $("<div>").append(temperatureElem).addClass("tempAndMessage");
+      var temperatureDiv = $("<div>").append(tempAndMessageDiv).addClass("temp-container");
       mainDisplay.append(temperatureDiv); 
 
       var messageData = $("<p>").text(message);
-      temperatureDiv.append(messageData);
+      tempAndMessageDiv.append(messageData);
       
       var iconNumber = String(weatherIcon).padStart(2, "0");
-      var iconUrl = `https://developer.accuweather.com/sites/default/files/${iconNumber}-s.png`;
-      var iconElem = $("<img>").attr("src", iconUrl);
-      var iconDiv = $("<div>").append(iconElem).addClass("icon-container");
-      $("#todayCard").append(iconDiv); 
+      // var iconUrl = `https://developer.accuweather.com/sites/default/files/${iconNumber}-s.png`;
+      var iconElem = $("<img>").attr("src", `icons/${weatherIcon}.svg`);    
+      var iconContainer = $("<div>").append(iconElem).addClass("icon-container");
+      temperatureDiv.append(iconContainer);
+       
   
       var rainElem = $("<p>").text("Rain: " + rain);
       var rainDiv = $("<div>").append(rainElem).addClass("rain");
@@ -42,8 +44,9 @@ $(document).ready(function () {
   
       var humidityElem = $("<p>").text("Humidity: " + humidity);
       var humidityDiv = $("<div>").append(humidityElem).addClass("humidity");
-      $("#todayCard").append(humidityDiv); 
       $("#todayCard").append(mainDisplay);
+      $("#todayCard").append(humidityDiv); 
+      
     }
     var dateElement = $("<p>").text(dateData).addClass("date");
     weatherDiv.append(dateElement);

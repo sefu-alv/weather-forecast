@@ -51,7 +51,13 @@ body {
   display: flex;
   flex-direction: column;
 }
-
+.main-display-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
 .card-deck {
   gap: 3em;
   width: 100%;
@@ -111,4 +117,17 @@ body {
 
 .weather-footer p {
   margin: 0;
+}
+.temp-container{
+  
+    display: flex;
+    flex-direction: row-reverse;
+    height: 25vh;
+    width: 30%;
+    justify-content: center;
+
+}
+.temp-container img {
+  width: 100px;
+  height: 100px;
 }
