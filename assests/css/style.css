@@ -44,12 +44,14 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  border: black solid 2px;
   
 }
 .today-container{
   width: 100%;
   display: flex;
   flex-direction: column;
+  border: pink solid 2px;
 }
 .main-display-container {
   display: flex;
@@ -57,6 +59,7 @@ body {
   align-items: center;
   flex-direction: column;
   width: 100%;
+  border: salmon solid 2px;
 }
 .card-deck {
   gap: 3em;
@@ -88,6 +91,7 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  border: saddlebrown solid 2px;
 }
 
 .forecast-container{
@@ -95,6 +99,7 @@ body {
   width: 75%;
   display: flex;
   flex-direction: column;
+  border: orange solid 2px;
 }
 
 #forecast {
@@ -105,7 +110,10 @@ body {
   justify-content: center;
   align-items: center;
   
-  
+  border: purple solid 2px;
+}
+#forecast div {
+  border: yellow solid 2px;
 }
 .weather-footer {
   background-color: #f8f9fa;
@@ -113,6 +121,7 @@ body {
   position: fixed;
   bottom: 0;
   width: 100%;
+  border-radius: 1px green;
 }
 
 .weather-footer p {
@@ -125,16 +134,35 @@ body {
     height: 25vh;
     width: 30%;
     justify-content: center;
+    border: #0659c4 solid 2px;
 
 }
 .temp-container img {
   width: 200px;
   height: 200px;
   color: white;
+  border: red solid 2px;
 }
 .tempAndMessage{
   font-size: 50px;
+  border: green solid 2px;
 }
 .tempAndMessage p {
   margin-top: 1rem;
+}
+#hourly{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: #0659c4 solid 2px;
+}
+#hourly div {
+  border: yellow solid 2px;
+  gap: 4rem;
+  width: 150px;
+}
+.hourly-container{
+  width: 100%;
 }
