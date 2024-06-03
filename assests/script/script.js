@@ -27,22 +27,11 @@ $(document).ready(function () {
 
       var tempAndMessageDiv = $("<div>")
         .addClass("tempAndMessage")
-        .append($("<p>").text(temperatureData))
-        .append($("<p>").text(message));
+        .append($("<p>").text(temperatureData).attr("id", "temp"))
+        .append($("<p>").text(message).attr("id", "message"));
 
-      var temperatureDiv = $("<div>")
-        .addClass("temp-container")
-        .append(tempAndMessageDiv)
-        .append(
-          $("<div>")
-            .addClass("icon-container")
-            .append($("<img>").attr("src", `icons/${String(weatherIcon)}.svg`))
-        );
-
-      mainDisplay.append(temperatureDiv);
-
-      $("#todayCard")
-        .append(mainDisplay)
+      var todayDataContainer = $("<div>")
+        .addClass("today-data-container")
         .append(
           $("<div>")
             .addClass("rain")
@@ -58,6 +47,19 @@ $(document).ready(function () {
             .addClass("humidity")
             .append($("<p>").text("Humidity: " + humidity))
         );
+      var temperatureDiv = $("<div>")
+        .addClass("temp-container")
+        .append(todayDataContainer)
+        .append(tempAndMessageDiv)
+        .append(
+          $("<div>")
+            .addClass("icon-container")
+            .append($("<img>").attr("src", `icons/${String(weatherIcon)}.svg`))
+        );
+
+      mainDisplay.append(temperatureDiv);
+
+      $("#todayCard").append(mainDisplay);
 
       return;
     }
@@ -68,13 +70,15 @@ $(document).ready(function () {
       .append($("<p>").addClass("temp").text(temperatureData))
       .append($("<img>").attr("src", `icons/${String(weatherIcon)}.svg`));
 
-      if (dateData.includes(":")) {
-        // Append to a different div
-        $("#hourly").append(weatherDiv);
-      } else {
-        // Append to the original div
-        $("#forecast").append(weatherDiv);
-      }
+    if (dateData.includes(":")) {
+      // Append to a different div
+      $("#hourly").append(weatherDiv);
+    } else {
+      // Append to the original div
+      $("#forecast").append(weatherDiv);
+    }
+    $("#hourly-text").text("Hourly Forecast");
+    $("#forecast-text").text("5 Day Forecast");
   }
   // This function pull the forecast for 5 days
   function forecast(locationKey, cityName) {
@@ -86,7 +90,9 @@ $(document).ready(function () {
     })
       .then((data) => {
         data.DailyForecasts.forEach((forecast) => {
-          var date = new Date(forecast.Date).toDateString(); // Get the date string
+          var dateObject = new Date(forecast.Date);
+          var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+          var date = days[dateObject.getDay()];
           var temperatureData =
             "L: " +
             forecast.Temperature.Minimum.Value +
@@ -139,6 +145,7 @@ $(document).ready(function () {
       );
     });
   }
+  // Returns the hourly weather for the selected area
   function hourlyWeather(locationKey, cityName) {
     var key = "QFHiIoVVbCLzbrruqyMqB2TAF35USXGN";
     var queryURL = `http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${locationKey}?apikey=${key}&details=true`;
@@ -147,8 +154,12 @@ $(document).ready(function () {
       method: "GET",
     })
       .then((data) => {
-        data.forEach((forecast) => {
-          var date = new Date(forecast.DateTime).toLocaleTimeString();
+        var limit = 8;
+        for (var i = 0; i < Math.min(data.length, limit); i++) {
+          var forecast = data[i];
+          var date = new Date(forecast.DateTime).toLocaleTimeString([], {
+            timeStyle: "short",
+          });
           var temperatureData = forecast.Temperature.Value + "°F";
           var weatherIcon = forecast.WeatherIcon;
           var message = forecast.IconPhrase;
@@ -160,7 +171,7 @@ $(document).ready(function () {
             weatherIcon,
             message
           );
-        });
+        }
       })
       .catch((error) => {
         console.error("Error getting forecast data:", error);

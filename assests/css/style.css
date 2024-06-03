@@ -3,7 +3,7 @@ html {
   height: auto;
 }
 body {
-  background: linear-gradient(109.5deg, rgb(13, 11, 136) 9.4%, rgb(86, 255, 248) 78.4%);
+  background: linear-gradient(to top, #09203f 0%, #537895 100%);
   width: 100%;
   display: flex; 
   justify-content: center; 
@@ -44,22 +44,28 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  border: black solid 2px;
+  
   
 }
 .today-container{
   width: 100%;
   display: flex;
-  flex-direction: column;
-  border: pink solid 2px;
+  justify-content: center;
+}
+.today-data-container{
+  font-size: 20px;
+  width: 30%;
+  margin: auto;
 }
 .main-display-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: start;
   flex-direction: column;
-  width: 100%;
-  border: salmon solid 2px;
+  width: 45%;
+  background: rgba(128, 128, 128, 0.3);
+  padding: 2rem;
+  border-radius: 10px;
 }
 .card-deck {
   gap: 3em;
@@ -91,7 +97,6 @@ body {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  border: saddlebrown solid 2px;
 }
 
 .forecast-container{
@@ -99,21 +104,21 @@ body {
   width: 75%;
   display: flex;
   flex-direction: column;
-  border: orange solid 2px;
 }
 
 #forecast {
-  
-  
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  
-  border: purple solid 2px;
+  gap: 2rem;
+  text-align: center;
 }
 #forecast div {
-  border: yellow solid 2px;
+  width: 300px;
+  background: rgba(128, 128, 128, 0.3);
+  padding: 1rem;
+  border-radius: 10px;
 }
 .weather-footer {
   background-color: #f8f9fa;
@@ -127,25 +132,36 @@ body {
 .weather-footer p {
   margin: 0;
 }
+.city-name-container{
+  width: 75%;
+}
 .temp-container{
   
     display: flex;
     flex-direction: row-reverse;
     height: 25vh;
-    width: 30%;
-    justify-content: center;
-    border: #0659c4 solid 2px;
-
+    width: 100%;
+    justify-content: start;
 }
 .temp-container img {
   width: 200px;
   height: 200px;
   color: white;
-  border: red solid 2px;
+}
+.icon-container{
+  width: 35%;
 }
 .tempAndMessage{
-  font-size: 50px;
-  border: green solid 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+#temp{
+  font-size: 40px;
+}
+#message{
+  font-size: 25px;
 }
 .tempAndMessage p {
   margin-top: 1rem;
@@ -155,14 +171,35 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 100%;
-  border: #0659c4 solid 2px;
+  width: 75%;
+  gap: 2rem;
+  text-align: center;
 }
 #hourly div {
-  border: yellow solid 2px;
   gap: 4rem;
   width: 150px;
+  background: rgba(128, 128, 128, 0.3);
+  padding: 1rem;
+  border-radius: 10px;
 }
 .hourly-container{
   width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.hourly-text{
+  width: 75%;
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 3rem;
+}
+.forecast-text{
+  width: 75%;
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 3rem;
+}
+.date{
+  font-size: 20px;
+  font-weight: 400;
 }
