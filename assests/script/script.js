@@ -83,7 +83,7 @@ $(document).ready(function () {
   // This function pull the forecast for 5 days
   function forecast(locationKey, cityName) {
     var key = "QFHiIoVVbCLzbrruqyMqB2TAF35USXGN";
-    var queryURL = `http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${key}&details=true`;
+    var queryURL = `https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${key}&details=true`;
     $.ajax({
       url: queryURL,
       method: "GET",
@@ -121,7 +121,7 @@ $(document).ready(function () {
   // function to get current weather
   function currentWeather(locationKey, cityName) {
     var key = "QFHiIoVVbCLzbrruqyMqB2TAF35USXGN";
-    var queryURL = `http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${key}&details=true`;
+    var queryURL = `https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${key}&details=true`;
     $.ajax({
       url: queryURL,
       method: "GET",
@@ -148,7 +148,7 @@ $(document).ready(function () {
   // Returns the hourly weather for the selected area
   function hourlyWeather(locationKey, cityName) {
     var key = "QFHiIoVVbCLzbrruqyMqB2TAF35USXGN";
-    var queryURL = `http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${locationKey}?apikey=${key}&details=true`;
+    var queryURL = `https://dataservice.accuweather.com/forecasts/v1/hourly/12hour/${locationKey}?apikey=${key}&details=true`;
     $.ajax({
       url: queryURL,
       method: "GET",
@@ -188,7 +188,7 @@ $(document).ready(function () {
 
           $.ajax({
             type: "GET",
-            url: `http://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${key}&q=${latitude}%2C${longitude}`,
+            url: `https://dataservice.accuweather.com/locations/v1/cities/geoposition/search?apikey=${key}&q=${latitude}%2C${longitude}`,
             dataType: "json",
           }).then((data) => {
             var city = data.LocalizedName;
